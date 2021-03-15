@@ -1,0 +1,7 @@
+query getBook($bookId: Float) {
+  getBook(id: $bookId) {
+    description
+    pages
+    website
+  }
+}

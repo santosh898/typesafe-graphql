@@ -1,0 +1,8 @@
+query getBooks($limit: Int) {
+  getBooks(limit: $limit) {
+    id
+    title
+    subtitle
+    author
+  }
+}

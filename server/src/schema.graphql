@@ -1,0 +1,16 @@
+type Book {
+  id: Float!
+  title: String!
+  subtitle: String!
+  author: String!
+  published: String
+  publisher: String
+  pages: Int!
+  description: String!
+  website: String!
+}
+
+type Query {
+  getBooks(limit: Int): [Book]!
+  getBook(id: Float): Book
+}
