@@ -2,73 +2,64 @@
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
 };
 
 export type Book = {
   __typename?: 'Book';
-  id: Scalars['Float'];
-  title: Scalars['String'];
-  subtitle: Scalars['String'];
-  author: Scalars['String'];
-  published?: Maybe<Scalars['String']>;
-  publisher?: Maybe<Scalars['String']>;
-  pages: Scalars['Int'];
-  description: Scalars['String'];
-  website: Scalars['String'];
+  author: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['Float']['output'];
+  pages: Scalars['Int']['output'];
+  published?: Maybe<Scalars['String']['output']>;
+  publisher?: Maybe<Scalars['String']['output']>;
+  subtitle: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  website: Scalars['String']['output'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  getBooks: Array<Maybe<Book>>;
-  getBook?: Maybe<Book>;
-};
-
-
-export type QueryGetBooksArgs = {
-  limit?: Maybe<Scalars['Int']>;
+  getBook: Book;
+  getBooks: Array<Book>;
 };
 
 
 export type QueryGetBookArgs = {
-  id?: Maybe<Scalars['Float']>;
+  id?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetBooksArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type GetBookQueryVariables = Exact<{
-  bookId?: Maybe<Scalars['Float']>;
+  bookId?: InputMaybe<Scalars['Float']['input']>;
 }>;
 
 
-export type GetBookQuery = (
-  { __typename?: 'Query' }
-  & { getBook?: Maybe<(
-    { __typename?: 'Book' }
-    & Pick<Book, 'description' | 'pages' | 'website'>
-  )> }
-);
+export type GetBookQuery = { __typename?: 'Query', getBook: { __typename?: 'Book', description: string, pages: number, website: string } };
 
 export type GetBooksQueryVariables = Exact<{
-  limit?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetBooksQuery = (
-  { __typename?: 'Query' }
-  & { getBooks: Array<Maybe<(
-    { __typename?: 'Book' }
-    & Pick<Book, 'id' | 'title' | 'subtitle' | 'author'>
-  )>> }
-);
+export type GetBooksQuery = { __typename?: 'Query', getBooks: Array<{ __typename?: 'Book', id: number, title: string, subtitle: string, author: string }> };
 
 
 export const GetBookDocument = gql`
@@ -105,8 +96,13 @@ export function useGetBookLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetBookQuery, GetBookQueryVariables>(GetBookDocument, options);
         }
+export function useGetBookSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBookQuery, GetBookQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBookQuery, GetBookQueryVariables>(GetBookDocument, options);
+        }
 export type GetBookQueryHookResult = ReturnType<typeof useGetBookQuery>;
 export type GetBookLazyQueryHookResult = ReturnType<typeof useGetBookLazyQuery>;
+export type GetBookSuspenseQueryHookResult = ReturnType<typeof useGetBookSuspenseQuery>;
 export type GetBookQueryResult = Apollo.QueryResult<GetBookQuery, GetBookQueryVariables>;
 export const GetBooksDocument = gql`
     query getBooks($limit: Int) {
@@ -143,6 +139,11 @@ export function useGetBooksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetBooksQuery, GetBooksQueryVariables>(GetBooksDocument, options);
         }
+export function useGetBooksSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBooksQuery, GetBooksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBooksQuery, GetBooksQueryVariables>(GetBooksDocument, options);
+        }
 export type GetBooksQueryHookResult = ReturnType<typeof useGetBooksQuery>;
 export type GetBooksLazyQueryHookResult = ReturnType<typeof useGetBooksLazyQuery>;
+export type GetBooksSuspenseQueryHookResult = ReturnType<typeof useGetBooksSuspenseQuery>;
 export type GetBooksQueryResult = Apollo.QueryResult<GetBooksQuery, GetBooksQueryVariables>;

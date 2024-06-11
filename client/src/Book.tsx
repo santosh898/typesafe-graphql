@@ -1,6 +1,5 @@
-import { useLazyQuery } from "@apollo/client";
-import React from "react";
-import { useGetBookLazyQuery } from "./queries";
+import React, { Suspense, useState } from "react";
+import { useGetBookSuspenseQuery } from "./queries";
 
 export interface BookProps {
   title: string;
@@ -10,7 +9,7 @@ export interface BookProps {
 }
 
 const Book: React.FC<BookProps> = ({ id, title, author, subtitle }) => {
-  const [getDetails, { loading, data }] = useGetBookLazyQuery();
+  const [showMore, setShowMore] = useState(false);
 
   return (
     <div
@@ -44,7 +43,7 @@ const Book: React.FC<BookProps> = ({ id, title, author, subtitle }) => {
       <p>
         By <b>{author}</b>
       </p>
-      {!data && !loading ? (
+      {!showMore ? (
         <button
           style={{
             alignSelf: "center",
@@ -52,19 +51,13 @@ const Book: React.FC<BookProps> = ({ id, title, author, subtitle }) => {
             background: "none",
             cursor: "pointer",
           }}
-          onClick={() =>
-            getDetails({
-              variables: {
-                bookId: id,
-              },
-            })
-          }
+          onClick={() => setShowMore(true)}
         >
-          More
+          Load More
         </button>
       ) : (
-        <>
-          {loading ? (
+        <Suspense
+          fallback={
             <span
               style={{
                 alignSelf: "center",
@@ -72,25 +65,52 @@ const Book: React.FC<BookProps> = ({ id, title, author, subtitle }) => {
             >
               Loading more details....
             </span>
-          ) : (
-            <>
-              <p>{data.getBook.description}</p>
-              <b>{data.getBook.pages} Pages</b>
-              <a
-                style={{
-                  marginTop: 10,
-                }}
-                target="_blank"
-                href={data.getBook.website}
-              >
-                {data.getBook.website}
-              </a>
-            </>
-          )}
-        </>
+          }
+        >
+          <MoreDetails bookId={id} />
+          <button
+            style={{
+              alignSelf: "center",
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+            }}
+            onClick={() => setShowMore(false)}
+          >
+            Less
+          </button>
+        </Suspense>
       )}
     </div>
   );
 };
 
 export default Book;
+
+const MoreDetails: React.FC<{ bookId: number }> = ({ bookId }) => {
+  const { error, data } = useGetBookSuspenseQuery({
+    variables: {
+      bookId,
+    },
+  });
+
+  if (error) {
+    return <div>{JSON.stringify(error, null, 2)}</div>;
+  }
+
+  return (
+    <>
+      <p>{data.getBook.description}</p>
+      <b>{data.getBook.pages} Pages</b>
+      <a
+        style={{
+          marginTop: 10,
+        }}
+        target="_blank"
+        href={data.getBook.website}
+      >
+        {data.getBook.website}
+      </a>
+    </>
+  );
+};

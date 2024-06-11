@@ -28,8 +28,8 @@ export type Book = {
 
 export type Query = {
   __typename?: 'Query';
-  getBooks: Array<Maybe<Book>>;
-  getBook?: Maybe<Book>;
+  getBooks: Array<Book>;
+  getBook: Book;
 };
 
 
@@ -152,8 +152,8 @@ export type BookResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getBooks?: Resolver<Array<Maybe<ResolversTypes['Book']>>, ParentType, ContextType, RequireFields<QueryGetBooksArgs, never>>;
-  getBook?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<QueryGetBookArgs, never>>;
+  getBooks?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<QueryGetBooksArgs, never>>;
+  getBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<QueryGetBookArgs, never>>;
 };
 
 export type Resolvers<ContextType = any> = {

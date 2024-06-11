@@ -1,17 +1,15 @@
 import React from "react";
-import { useGetBooksQuery } from "./queries";
-import Book, { BookProps } from "./Book";
+import { useGetBooksSuspenseQuery } from "./queries";
+import Book from "./Book";
 
 const ListBooks: React.FC<{}> = () => {
-  const { loading, error, data } = useGetBooksQuery({
+  const { error, data } = useGetBooksSuspenseQuery({
     variables: {
       limit: 5,
     },
   });
 
-  if (loading) {
-    return <div>Loading....</div>;
-  } else if (error) {
+  if (error) {
     return <div>{JSON.stringify(error, null, 2)}</div>;
   }
 
@@ -25,7 +23,7 @@ const ListBooks: React.FC<{}> = () => {
         alignItems: "flex-start",
       }}
     >
-      {books.map((book: BookProps) => (
+      {books.map((book) => (
         <Book key={book.id} {...book} />
       ))}
     </div>

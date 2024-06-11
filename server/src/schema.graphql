@@ -11,6 +11,6 @@ type Book {
 }
 
 type Query {
-  getBooks(limit: Int): [Book]!
-  getBook(id: Float): Book
+  getBooks(limit: Int): [Book!]!
+  getBook(id: Float): Book!
 }
