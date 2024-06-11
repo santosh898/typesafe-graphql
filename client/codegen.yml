@@ -4,8 +4,6 @@ documents: "src/**/*.(ts|graphql)"
 generates:
   src/queries/typedQueries.ts:
     plugins:
-      - add:
-          content: '/* tslint:disable */'
       - "typescript"
       - "typescript-operations"
       - "typescript-react-apollo"
